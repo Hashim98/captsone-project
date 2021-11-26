@@ -52,7 +52,8 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
-                    sh "docker scan -f hello-world"
+                    sh "docker scan y"
+                    sh "docker scan hello-world"
                     docker.withRegistry('', registryCredentials) {
                         dockerImage.push()
                     }
