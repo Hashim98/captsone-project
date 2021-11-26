@@ -4,6 +4,8 @@ This is the final project to graducate at [Udacity Cloud DevOps Nanodegree](http
 
 Final applciation URL: [http://ec2-13-239-85-152.ap-southeast-2.compute.amazonaws.com](http://ec2-13-239-85-152.ap-southeast-2.compute.amazonaws.com)
 
+Github Repo: [https://github.com/Hashim98/captsone-project](https://github.com/Hashim98/captsone-project)
+
 ## Technology Used:
 - EKS
 - Jenkins
