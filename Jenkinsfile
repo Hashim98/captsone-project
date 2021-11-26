@@ -48,16 +48,16 @@ pipeline {
         // }
 
         // Publish Docker image to docker hub registry
-        stage('Push Image to Registry') {
-            steps {
-                script {
-                    dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
-                    docker.withRegistry('', registryCredentials) {
-                        dockerImage.push()
-                    }
-                }
-            }
-        }
+        // stage('Push Image to Registry') {
+        //     steps {
+        //         script {
+        //             dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
+        //             docker.withRegistry('', registryCredentials) {
+        //                 dockerImage.push()
+        //             }
+        //         }
+        //     }
+        // }
 
         // Deploy app to AWS EKS
         stage('Deploy to EKS Cluster') {
