@@ -2,6 +2,8 @@
 
 This is the final project to graducate at [Udacity Cloud DevOps Nanodegree](https://www.udacity.com/course/cloud-dev-ops-nanodegree--nd9991). The project requires to setup kubernetes cluster on AWS and deploy the dockerized app implementing CI/CD with Jenkins.
 
+Final applciation URL: [http://ec2-13-239-85-152.ap-southeast-2.compute.amazonaws.com](http://ec2-13-239-85-152.ap-southeast-2.compute.amazonaws.com)
+
 ## Technology Used:
 - EKS
 - Jenkins
