@@ -64,7 +64,7 @@ pipeline {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
-                        sh "aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
+                        sh "/usr/local/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
                         sh "kubectl apply -f hello-world.yaml"
                         sh "kubectl wait --for=condition=available --timeout=300s --all deployments"
                     }
@@ -76,7 +76,7 @@ pipeline {
         stage('Rolling Update') {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
-                    sh "aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
+                    sh "/usr/local/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
                     sh "kubectl set env deployment/hello-world APP_COLOR=green BUILD_NUMBER=${env.BUILD_NUMBER}"
                     sh "kubectl set image deployment/hello-world hello-world=hashimriaz98/hello-world:${env.BUILD_NUMBER} --record"
                 }
@@ -86,7 +86,7 @@ pipeline {
         stage('Wait for Successfull Rolling Update') {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
-                    sh "aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
+                    sh "/usr/local/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
                     sh "kubectl wait --for=condition=available --timeout=180s --all deployments"
                     sh "sleep 180"
                 }
@@ -98,7 +98,7 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
                     sh '''#!/bin/bash
-                        aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER
+                        /usr/local/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER
                         APP_URL=$(kubectl get service hello-world | grep 'amazonaws.com' | awk '{print $4}')
                         OUTPUT=$(curl --silent ${APP_URL})
                         STATUS_CODE=$(curl -o /dev/null --silent -w "%{http_code}\n" ${APP_URL})
