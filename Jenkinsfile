@@ -13,7 +13,7 @@ pipeline {
         stage('Install docker') {
             steps {
                 script {
-                    sh "apt update && apt upgrade"
+                    sh "yum upgrade"
                     sh "apt-get update && apt-get install -y docker.io"
                 }
             }
