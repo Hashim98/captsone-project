@@ -9,6 +9,15 @@ pipeline {
     }
 
     stages {
+
+        stage('Install docker') {
+            steps {
+                script {
+                    sh "apt-get update && apt-get install -y docker.io"
+                }
+            }
+        }
+        
         // Linting Dockerfile
         stage('Linting Dockerfile') {
             steps {
@@ -26,14 +35,6 @@ pipeline {
                                 fi
                             '''
                     }
-                }
-            }
-        }
-
-        stage('Install docker') {
-            steps {
-                script {
-                    sh "apt-get update && apt-get install -y docker.io"
                 }
             }
         }
