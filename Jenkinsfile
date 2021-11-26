@@ -10,34 +10,26 @@ pipeline {
 
     stages {
 
-        // stage('Install docker') {
-        //     steps {
-        //         script {
-        //             sh "apt install -y docker.io"
-        //         }
-        //     }
-        // }
-
         // Linting Dockerfile
-        // stage('Linting Dockerfile') {
-        //     steps {
-        //         script {
-        //             docker.image('hadolint/hadolint:latest-debian').inside() {
-        //                     sh 'hadolint ./Dockerfile | tee -a hadolint_lint.txt'
-        //                     sh '''
-        //                         lintErrors=$(stat --printf="%s"  hadolint_lint.txt)
-        //                         if [ "$lintErrors" -gt "0" ]; then
-        //                             echo "Errors have been found, please see below"
-        //                             cat hadolint_lint.txt
-        //                             exit 1
-        //                         else
-        //                             echo "There are no erros found on Dockerfile!!"
-        //                         fi
-        //                     '''
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Linting Dockerfile') {
+            steps {
+                script {
+                    docker.image('hadolint/hadolint:latest-debian').inside() {
+                            sh 'hadolint ./Dockerfile | tee -a hadolint_lint.txt'
+                            sh '''
+                                lintErrors=$(stat --printf="%s"  hadolint_lint.txt)
+                                if [ "$lintErrors" -gt "0" ]; then
+                                    echo "Errors have been found, please see below"
+                                    cat hadolint_lint.txt
+                                    exit 1
+                                else
+                                    echo "There are no erros found on Dockerfile!!"
+                                fi
+                            '''
+                    }
+                }
+            }
+        }
 
         // Build Docker image
         stage('Build Docker Image') {
@@ -49,11 +41,11 @@ pipeline {
         }
 
         // Scan Docker Image vulnerability with Anchore inline scan
-        stage('Scan Docker Image') {
-            steps {
-                sh "curl -s https://ci-tools.anchore.io/inline_scan-latest | bash -s -- -p -r hashimriaz98/hello-world:${env.BUILD_NUMBER}"
-            }
-        }
+        // stage('Scan Docker Image') {
+        //     steps {
+        //         sh "curl -s https://ci-tools.anchore.io/inline_scan-latest | bash -s -- -p -r hashimriaz98/hello-world:${env.BUILD_NUMBER}"
+        //     }
+        // }
 
         // Publish Docker image to docker hub registry
         stage('Push Image to Registry') {
