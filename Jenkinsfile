@@ -32,42 +32,39 @@ pipeline {
         }
 
         // Build Docker image
-        // stage('Build Docker Image') {
-        //     steps {
-        //         script {
-        //             dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
+                }
+            }
+        }
 
         // Scan Docker Image vulnerability with Anchore inline scan
-        // stage('Scan Docker Image') {
-        //     steps {
-        //         sh "curl -s https://ci-tools.anchore.io/inline_scan-latest | bash -s -- -p -r hashimriaz98/hello-world:${env.BUILD_NUMBER}"
-        //     }
-        // }
+        stage('Scan Docker Image') {
+            steps {
+                sh "curl -s https://ci-tools.anchore.io/inline_scan-latest | bash -s -- -p -r hashimriaz98/hello-world:${env.BUILD_NUMBER}"
+            }
+        }
 
         // Publish Docker image to docker hub registry
-        // stage('Push Image to Registry') {
-        //     steps {
-        //         script {
-        //             dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
-        //             docker.withRegistry('', registryCredentials) {
-        //                 dockerImage.push()
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Push Image to Registry') {
+            steps {
+                script {
+                    dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
+                    docker.withRegistry('', registryCredentials) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
 
         // Deploy app to AWS EKS
         stage('Deploy to EKS Cluster') {
             steps {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
-                        sh "/Users/vishal/opt/anaconda3/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
-                        sh "/Users/vishal/opt/anaconda3/bin/aws configure set aws_access_key_id AKIAVWTH2TD7LGVGIMGX"
-                        sh "/Users/vishal/opt/anaconda3/bin/aws configure set aws_secret_access_key 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"
-                        sh "/Users/vishal/opt/anaconda3/bin/aws configure set default_region_name ap-southeast-2"
+                        sh "aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
                         sh "kubectl apply -f hello-world.yaml"
                         sh "kubectl wait --for=condition=available --timeout=300s --all deployments"
                     }
@@ -79,7 +76,7 @@ pipeline {
         stage('Rolling Update') {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
-                    sh "/Users/vishal/opt/anaconda3/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
+                    sh "aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
                     sh "kubectl set env deployment/hello-world APP_COLOR=green BUILD_NUMBER=${env.BUILD_NUMBER}"
                     sh "kubectl set image deployment/hello-world hello-world=hashimriaz98/hello-world:${env.BUILD_NUMBER} --record"
                 }
@@ -89,7 +86,7 @@ pipeline {
         stage('Wait for Successfull Rolling Update') {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
-                    sh "/Users/vishal/opt/anaconda3/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
+                    sh "aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
                     sh "kubectl wait --for=condition=available --timeout=180s --all deployments"
                     sh "sleep 180"
                 }
@@ -101,7 +98,7 @@ pipeline {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
                     sh '''#!/bin/bash
-                        /Users/vishal/opt/anaconda3/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER
+                        aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER
                         APP_URL=$(kubectl get service hello-world | grep 'amazonaws.com' | awk '{print $4}')
                         OUTPUT=$(curl --silent ${APP_URL})
                         STATUS_CODE=$(curl -o /dev/null --silent -w "%{http_code}\n" ${APP_URL})
