@@ -52,7 +52,7 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
-                    sh "yes | docker scan"
+                    sh "(sleep 10; echo y;) | docker scan"
                     sh "docker scan hello-world"
                     docker.withRegistry('', registryCredentials) {
                         dockerImage.push()
