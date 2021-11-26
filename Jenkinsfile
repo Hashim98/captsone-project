@@ -65,6 +65,9 @@ pipeline {
                 dir('kubernetes') {
                     withAWS(credentials: 'aws-credentials', region: 'ap-southeast-2') {
                         sh "/Users/vishal/opt/anaconda3/bin/aws eks --region ap-southeast-2 update-kubeconfig --name CapstoneEKSDev-EKS-CLUSTER"
+                        sh "/Users/vishal/opt/anaconda3/bin/aws configure set aws_access_key_id AKIAVWTH2TD7LGVGIMGX"
+                        sh "/Users/vishal/opt/anaconda3/bin/aws configure set aws_secret_access_key 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"
+                        sh "/Users/vishal/opt/anaconda3/bin/aws configure set default_region_name ap-southeast-2"
                         sh "kubectl apply -f hello-world.yaml"
                         sh "kubectl wait --for=condition=available --timeout=300s --all deployments"
                     }
