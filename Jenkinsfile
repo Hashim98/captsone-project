@@ -32,13 +32,13 @@ pipeline {
         }
 
         // Build Docker image
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
-                }
-            }
-        }
+        // stage('Build Docker Image') {
+        //     steps {
+        //         script {
+        //             dockerImage = docker.build("hashimriaz98/hello-world:${env.BUILD_NUMBER}")
+        //         }
+        //     }
+        // }
 
         // Scan Docker Image vulnerability with Anchore inline scan
         // stage('Scan Docker Image') {
