@@ -4,6 +4,7 @@ WORKDIR /go/src/app
 
 COPY ./app/main.go /go/src/app
 
+RUN go mod init
 RUN go build -o webserver .
 
 FROM alpine:edge

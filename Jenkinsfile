@@ -10,13 +10,13 @@ pipeline {
 
     stages {
 
-        stage('Install docker') {
-            steps {
-                script {
-                    sh "apt install -y docker.io"
-                }
-            }
-        }
+        // stage('Install docker') {
+        //     steps {
+        //         script {
+        //             sh "apt install -y docker.io"
+        //         }
+        //     }
+        // }
 
         // Linting Dockerfile
         stage('Linting Dockerfile') {
